@@ -38,7 +38,6 @@ class PiePolylineChartViewController: DemoBaseViewController {
         self.setup(pieChartView: chartView)
         
         chartView.delegate = self
-        
         chartView.legend.enabled = false
         chartView.setExtraOffsets(left: 20, top: 0, right: 20, bottom: 0)
         

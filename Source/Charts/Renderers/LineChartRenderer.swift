@@ -207,7 +207,11 @@ open class LineChartRenderer: LineRadarRenderer
             // let the spline start
             cubicPath.move(to: CGPoint(x: CGFloat(cur.x), y: CGFloat(cur.y * phaseY)), transform: valueToPixelMatrix)
             
-            for j in _xBounds.dropFirst()
+            // 问题源码：for j in _xBounds.dropFirst()
+            // Bug: 在swift5运行时，j的startIndex从2开始，正确的startIndex应该是1
+            // RootCause: 只能猜测为Swfit5 向下兼容时，遍历的底层实现出现变更，造成_Bounds的Index返回不正确
+            // 修复代码： for j in _xBounds.min + 1 ... _xBounds.max
+            for j in _xBounds.min + 1 ... _xBounds.max
             {
                 prev = cur
                 cur = dataSet.entryForIndex(j)
@@ -582,7 +586,11 @@ open class LineChartRenderer: LineRadarRenderer
                 (dataSet.circleHoleColor == nil ||
                     dataSet.circleHoleColor == NSUIColor.clear)
             
-            for j in _xBounds
+            // 问题源码：for j in _xBounds
+            // Bug: 在swift5运行时，j的startIndex从1开始，正确的startIndex应该是0
+            // RootCause: 只能猜测为Swfit5 向下兼容时，遍历的底层实现出现变更，造成_Bounds的Index返回不正确
+            // 修复代码： for j in 0 ..< dataSet.entryCount
+            for j in 0 ..< dataSet.entryCount
             {
                 guard let e = dataSet.entryForIndex(j) else { break }
 
